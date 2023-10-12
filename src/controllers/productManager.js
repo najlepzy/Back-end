@@ -33,7 +33,7 @@ class ProductManager {
         return JSON.parse(readFileSync(this.path, 'utf8'));
       } catch (err) {
         console.log('Error loading products:', err);
-        return null;
+        return [];
       }
     } else {
       // If the file doesn't exist, create an empty JSON file
@@ -60,13 +60,14 @@ class ProductManager {
    */
   addProduct(product) {
     if (!this.isValidProduct(product)) return;
-    if (this.isCodeExists(product.code)) return;
 
-    product.id = this.nextProductId++;
-    this.products.push(product);
-
-    this.saveProducts();
-    console.log('Product successfully added.');
+    // Verify if the product already exists before adding it
+    if (!this.isCodeExists(product.code)) {
+      product.id = this.nextProductId++;
+      this.products.push(product);
+      this.saveProducts();
+      console.log('Product added successfully.'); // Updated message
+    }
   }
 
   /**
@@ -90,8 +91,6 @@ class ProductManager {
    */
   isCodeExists(code) {
     const exists = this.products.some(product => product.code === code);
-
-    if (exists) console.log('Code already exists.');
 
     return exists;
   }
@@ -162,6 +161,7 @@ class ProductManager {
 
     console.log('Product successfully deleted.');
   }
+
 }
 
 // Use import.meta.url to get the current module's URL
@@ -180,45 +180,113 @@ manager.addProduct({
   title: 'Alaska House',
   description: 'Alaskan Rustic Home: Experience wilderness living in this charming log cabin, surrounded by mountains and forests. Cozy design, panoramic views, and modern amenities. Your retreat in the Last Frontier.',
   price: 400000,
-  thumbnail: `alaskaHouse.imgExample`,
+  thumbnail: 'alaskaHouse.imgExample',
   code: 'P1',
   stock: 1,
 });
 
 manager.addProduct({
-  title: 'Nevada House',
-  description: 'Nevada Mountain Retreat: Discover tranquility in this stunning mountain home nestled in the heart of Nevada. Breathtaking views, modern comforts, and endless outdoor adventures await. Your Nevada sanctuary awaits you',
-  price: 350000,
-  thumbnail: 'nevadaHouse.imgExample',
+  title: 'California Villa',
+  description: 'Luxurious villa in sunny California: Enjoy the golden state in this modern and spacious villa. With a private pool, palm trees in the garden, and a short drive to the beach.',
+  price: 1200000,
+  thumbnail: 'californiaVilla.imgExample',
   code: 'P2',
   stock: 1,
 });
+
 manager.addProduct({
-  title: 'Wyoming House',
-  description: 'lorem ipsum',
-  price: 320000,
-  thumbnail: 'wyomingHouse.imgExample',
+  title: 'New York Apartment',
+  description: 'Stylish apartment in the heart of New York: Live the city life in this chic apartment located in Manhattan. Close to Central Park and Times Square, with an impressive skyline view.',
+  price: 800000,
+  thumbnail: 'newYorkApartment.imgExample',
   code: 'P3',
   stock: 1,
 });
 
-console.log(manager.getProducts()); // Show all products
-console.log(manager.getProductById(1)); // Show ID:1 product
-console.log(manager.getProductById(3)); // Show ID:3 product
+manager.addProduct({
+  title: 'Texas Ranch',
+  description: 'Spacious ranch in Texas: Experience southern charm in this beautiful ranch. Includes a large field for horses, a barn, and a classic country house.',
+  price: 600000,
+  thumbnail: 'texasRanch.imgExample',
+  code: 'P4',
+  stock: 1,
+});
+
+manager.addProduct({
+  title: 'Florida Beach House',
+  description: 'Beachfront house in Florida: Wake up to the sound of waves in this serene beach house. Features a deck overlooking the ocean, open plan living, and easy access to the beach.',
+  price: 700000,
+  thumbnail: 'floridaBeachHouse.imgExample',
+  code: 'P5',
+  stock: 1,
+});
+
+manager.addProduct({
+  title: 'Chicago Loft',
+  description: 'Urban loft in Chicago: Enjoy city living in this contemporary loft located in downtown Chicago. Close to shops, restaurants, and Willis Tower.',
+  price: 500000,
+  thumbnail: 'chicagoLoft.imgExample',
+  code: 'P6',
+  stock: 1,
+});
+
+manager.addProduct({
+  title: 'Hawaii Bungalow',
+  description: 'Tropical bungalow in Hawaii: Relax in this cozy bungalow located near the beach. Surrounded by tropical plants and flowers, with a view of the Pacific Ocean.',
+  price: 600000,
+  thumbnail: 'hawaiiBungalow.imgExample',
+  code: 'P7',
+  stock: 1,
+});
+
+manager.addProduct({
+  title: 'Colorado Cabin',
+  description: 'Mountain cabin in Colorado: Escape to this rustic cabin located in the Rocky Mountains. Perfect for outdoor enthusiasts with opportunities for hiking, skiing, and nature watching.',
+  price: 450000,
+  thumbnail: 'coloradoCabin.imgExample',
+  code: 'P8',
+  stock: 1,
+});
+
+manager.addProduct({
+  title: 'Arizona Adobe Home',
+  description: 'Adobe home in Arizona: Experience desert living in this traditional adobe home. Features a cactus garden, stucco fireplace, and stunning sunset views.',
+  price: 350000,
+  thumbnail: 'arizonaAdobeHome.imgExample',
+  code: 'P9',
+  stock: 1,
+});
+
+manager.addProduct({
+  title: 'Washington Townhouse',
+  description: 'Townhouse in Washington D.C.: Live near the nation’s capital in this elegant townhouse. Walking distance to landmarks and museums.',
+  price: 750000,
+  thumbnail: 'washingtonTownhouse.imgExample',
+  code: 'P10',
+  stock: 1,
+});
+
+/* useless info */
+/* console.log(manager.getProducts()); */ // Show all products
+/* console.log(manager.getProductById(1)); */ // Show ID:1 product
+/* console.log(manager.getProductById(3)); */ // Show ID:3 product
 
 // Update product with ID 1
-manager.updateProduct(1, {
+/* manager.updateProduct(1, {
   title: 'Alaska Hotel',
   description: 'Updated description for testing',
   price: 500000,
   thumbnail: 'updatedAlaskaHotel.imgExample',
   code: 'P1',
   stock: 2,
-});
+}); */
 
-console.log(manager.getProducts()); // Show all products after update
+/* console.log(manager.getProducts()); */ // Show all products after update
 
 // Delete product with ID 1
-manager.deleteProduct(1);
+/* manager.deleteProduct(1); */
 
-console.log(manager.getProducts()); // Show all products after deletion
+/* console.log(manager.getProducts()); */ // Show all products after deletion
+
+/* useless info */
+export default ProductManager;
