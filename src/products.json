@@ -81,12 +81,21 @@
     "id": 9
   },
   {
+    "title": "Chicag22o Loft",
+    "description": "Urban loft in Chicago: Enjoy city living in this contemporary loft located in downtown Chicago. Close to shops, restaurants, and Willis Tower.",
+    "price": 50000,
+    "thumbnail": "chicagoLoft.imgExample",
+    "code": "P6",
+    "stock": 1,
+    "id": 10
+  },
+  {
     "title": "Washington Townhouse",
     "description": "Townhouse in Washington D.C.: Live near the nation’s capital in this elegant townhouse. Walking distance to landmarks and museums.",
     "price": 750000,
     "thumbnail": "washingtonTownhouse.imgExample",
     "code": "P10",
     "stock": 1,
-    "id": 10
+    "id": 11
   }
 ]

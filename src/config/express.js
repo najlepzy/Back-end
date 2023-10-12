@@ -57,12 +57,22 @@ expressConnection.put('/products/:id', async (req, res) => {
     try {
         const productId = parseInt(req.params.id);
         const updatedProductData = req.body;
-        await productManager.updateProduct(productId, updatedProductData);
-        res.json({ message: 'Product updated successfully' });
+        // Check if the product with the given ID exists
+        const product = await productManager.getProductById(productId);
+        if (product) {
+            // Update the existing product's properties without changing its ID
+            Object.assign(product, updatedProductData);
+            // Save the updated product
+            await productManager.saveProducts();
+            res.json({ message: 'Product updated successfully' });
+        } else {
+            res.status(404).json({ message: 'Product not found' });
+        }
     } catch (error) {
         res.status(500).json({ message: 'Error updating product' });
     }
 });
+
 
 expressConnection.delete('/products/:id', async (req, res) => {
     try {

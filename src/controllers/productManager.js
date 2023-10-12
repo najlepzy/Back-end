@@ -49,10 +49,12 @@ class ProductManager {
   saveProducts() {
     try {
       writeFileSync(this.path, JSON.stringify(this.products, null, 2), 'utf8');
+      console.log('Products saved successfully.');
     } catch (err) {
       console.log('Error saving products:', err);
     }
   }
+
 
   /**
    * Adds a new product to the manager.
@@ -155,12 +157,17 @@ class ProductManager {
 
     // Remove the product from the array
     this.products.splice(index, 1);
+    console.log('After deletion:', this.products);
 
     // Save updated products list
     this.saveProducts();
 
+    // Check the products list after saving
+    console.log('After saving:', this.products);
+
     console.log('Product successfully deleted.');
   }
+
 
 }
 
