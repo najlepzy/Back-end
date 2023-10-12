@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import path from 'path';
 
 /**
@@ -12,19 +12,34 @@ class ProductManager {
   constructor(filePath) {
     this.path = filePath;
     this.products = this.loadProducts() || [];
-    this.nextProductId = this.products.length + 1;
+    this.nextProductId = this.calculateNextProductId();
   }
 
+  calculateNextProductId() {
+    if (this.products.length === 0) {
+      return 1;
+    } else {
+      const maxId = Math.max(...this.products.map(product => product.id));
+      return maxId + 1;
+    }
+  }
   /**
    * Loads the products from the JSON file.
    * @returns {Array} - The array of products.
    */
   loadProducts() {
-    try {
-      return JSON.parse(readFileSync(this.path, 'utf8'));
-    } catch (err) {
-      console.log('Error loading products:', err);
-      return null;
+    if (existsSync(this.path)) {
+      try {
+        return JSON.parse(readFileSync(this.path, 'utf8'));
+      } catch (err) {
+        console.log('Error loading products:', err);
+        return null;
+      }
+    } else {
+      // If the file doesn't exist, create an empty JSON file
+      this.products = [];
+      this.saveProducts(); // This creates an empty products.json file
+      return this.products;
     }
   }
 
@@ -176,6 +191,14 @@ manager.addProduct({
   price: 350000,
   thumbnail: 'nevadaHouse.imgExample',
   code: 'P2',
+  stock: 1,
+});
+manager.addProduct({
+  title: 'Wyoming House',
+  description: 'lorem ipsum',
+  price: 320000,
+  thumbnail: 'wyomingHouse.imgExample',
+  code: 'P3',
   stock: 1,
 });
 

@@ -7,5 +7,14 @@
     "code": "P2",
     "stock": 1,
     "id": 2
+  },
+  {
+    "title": "Wyoming House",
+    "description": "lorem ipsum",
+    "price": 320000,
+    "thumbnail": "wyomingHouse.imgExample",
+    "code": "P3",
+    "stock": 1,
+    "id": 3
   }
 ]
