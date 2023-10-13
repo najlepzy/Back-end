@@ -16,12 +16,14 @@ class ProductManager {
   }
 
   calculateNextProductId() {
-    if (this.products.length === 0) {
-      return 1;
-    } else {
-      const maxId = Math.max(...this.products.map(product => product.id));
-      return maxId + 1;
+    const usedIds = this.products.map(product => product.id);
+    let nextId = 1;
+
+    while (usedIds.includes(nextId)) {
+      nextId++;
     }
+
+    return nextId;
   }
   /**
    * Loads the products from the JSON file.
@@ -30,9 +32,13 @@ class ProductManager {
   loadProducts() {
     if (existsSync(this.path)) {
       try {
-        return JSON.parse(readFileSync(this.path, 'utf8'));
+        this.products = JSON.parse(readFileSync(this.path, 'utf8'));
+        this.nextProductId = this.calculateNextProductId();
+        console.log('Products loaded successfully.');
+        return this.products;
       } catch (err) {
         console.log('Error loading products:', err);
+        this.products = [];
         return [];
       }
     } else {
@@ -42,7 +48,6 @@ class ProductManager {
       return this.products;
     }
   }
-
   /**
    * Saves the products to the JSON file.
    */
@@ -124,20 +129,21 @@ class ProductManager {
    * @param {Object} newProductData - The new product data to update with. This can be a partial object, containing only the fields that need to be updated.
    */
   updateProduct(id, newProductData) {
-    const index = this.products.findIndex(product => product.id === id);
+    const product = this.products.find(p => p.id === id);
 
-    if (index === -1) {
+    if (!product) {
       console.log('Product not found.');
       return;
     }
 
-    // Merge old and new data, but keep old id
-    const updatedProduct = { ...this.products[index], ...newProductData, id: this.products[index].id };
+    // Update the fields of the existing product with the new data
+    for (const key in newProductData) {
+      if (key in product) {
+        product[key] = newProductData[key];
+      }
+    }
 
-    // Replace old product with updated one
-    this.products[index] = updatedProduct;
-
-    // Save updated products list
+    // Save updated products to JSON file
     this.saveProducts();
 
     console.log('Product successfully updated.');
@@ -149,26 +155,20 @@ class ProductManager {
  */
   deleteProduct(id) {
     const index = this.products.findIndex(product => product.id === id);
-
+  
     if (index === -1) {
       console.log('Product not found.');
       return;
     }
-
+  
     // Remove the product from the array
     this.products.splice(index, 1);
-    console.log('After deletion:', this.products);
-
+  
     // Save updated products list
     this.saveProducts();
-
-    // Check the products list after saving
-    console.log('After saving:', this.products);
-
+  
     console.log('Product successfully deleted.');
   }
-
-
 }
 
 // Use import.meta.url to get the current module's URL

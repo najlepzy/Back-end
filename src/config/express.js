@@ -77,12 +77,14 @@ expressConnection.put('/products/:id', async (req, res) => {
 expressConnection.delete('/products/:id', async (req, res) => {
     try {
         const productId = parseInt(req.params.id);
-        await productManager.deleteProduct(productId);
+        await productManager.deleteProduct(productId); // This method handles product deletion and file update
         res.json({ message: 'Product deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting product' });
     }
 });
+
+
 
 expressConnection.listen(port, () => {
     console.log(`Server running on port ${port}`);
