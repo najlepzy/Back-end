@@ -33,7 +33,6 @@ class ProductManager {
     if (existsSync(this.path)) {
       try {
         this.products = JSON.parse(readFileSync(this.path, 'utf8'));
-        this.nextProductId = this.calculateNextProductId();
         console.log('Products loaded successfully.');
         return this.products;
       } catch (err) {
@@ -48,6 +47,7 @@ class ProductManager {
       return this.products;
     }
   }
+  
   /**
    * Saves the products to the JSON file.
    */
@@ -66,16 +66,20 @@ class ProductManager {
    * @param {Object} product - The product object to add.
    */
   addProduct(product) {
-    if (!this.isValidProduct(product)) return;
+    if (!this.isValidProduct(product)) {
+      return { error: 'Invalid product.' };
+    }
 
-    // Verify if the product already exists before adding it
     if (!this.isCodeExists(product.code)) {
       product.id = this.nextProductId++;
       this.products.push(product);
       this.saveProducts();
-      console.log('Product added successfully.'); // Updated message
+      return product;
+    } else {
+      return { error: 'Product code already exists' };
     }
   }
+
 
   /**
    * Validates whether a product is valid or not.
@@ -84,9 +88,11 @@ class ProductManager {
    */
   isValidProduct(product) {
     const requiredFields = ['title', 'description', 'price', 'thumbnail', 'code', 'stock'];
-    const isValid = requiredFields.every(field => product[field]);
+    const isValid = requiredFields.every(field => {
+      return product.hasOwnProperty(field) && product[field] !== '';
+    });
 
-    if (!isValid) console.log('All fields are required.');
+    if (!isValid) console.log('All fields are required and must have valid values.');
 
     return isValid;
   }
@@ -130,23 +136,26 @@ class ProductManager {
    */
   updateProduct(id, newProductData) {
     const product = this.products.find(p => p.id === id);
-
+  
     if (!product) {
       console.log('Product not found.');
       return;
     }
-
-    // Update the fields of the existing product with the new data
+  
+    // Verificar si el código ha cambiado y si existe en otro producto
+    if (newProductData.code !== product.code && this.isCodeExists(newProductData.code)) {
+      console.log('The product code already exists.');
+      return;
+    }
+  
+    // Copiar los nuevos datos al producto existente
     for (const key in newProductData) {
       if (key in product) {
         product[key] = newProductData[key];
       }
     }
-
-    // Save updated products to JSON file
+  
     this.saveProducts();
-
-    console.log('Product successfully updated.');
   }
 
   /**
@@ -155,18 +164,18 @@ class ProductManager {
  */
   deleteProduct(id) {
     const index = this.products.findIndex(product => product.id === id);
-  
+
     if (index === -1) {
       console.log('Product not found.');
       return;
     }
-  
+
     // Remove the product from the array
     this.products.splice(index, 1);
-  
+
     // Save updated products list
     this.saveProducts();
-  
+
     console.log('Product successfully deleted.');
   }
 }
@@ -183,7 +192,7 @@ const productsPath = path.resolve(currentDir, '..', 'products.json');
 // Pass this path to the constructor of ProductManager
 const manager = new ProductManager(productsPath);
 
-manager.addProduct({
+/* manager.addProduct({
   title: 'Alaska House',
   description: 'Alaskan Rustic Home: Experience wilderness living in this charming log cabin, surrounded by mountains and forests. Cozy design, panoramic views, and modern amenities. Your retreat in the Last Frontier.',
   price: 400000,
@@ -271,7 +280,7 @@ manager.addProduct({
   thumbnail: 'washingtonTownhouse.imgExample',
   code: 'P10',
   stock: 1,
-});
+}); */
 
 /* useless info */
 /* console.log(manager.getProducts()); */ // Show all products
