@@ -47,7 +47,7 @@ class ProductManager {
       return this.products;
     }
   }
-  
+
   /**
    * Saves the products to the JSON file.
    */
@@ -123,11 +123,8 @@ class ProductManager {
    */
   getProductById(id) {
     const product = this.products.find(product => product.id === id);
-
-    if (!product) console.log('Product not found.');
-
-    return product;
-  }
+    return product ? product : console.log('Product not found.');
+}
 
   /**
    * Updates a product in the manager.
@@ -136,25 +133,7 @@ class ProductManager {
    */
   updateProduct(id, newProductData) {
     const product = this.products.find(p => p.id === id);
-  
-    if (!product) {
-      console.log('Product not found.');
-      return;
-    }
-  
-    // Verificar si el código ha cambiado y si existe en otro producto
-    if (newProductData.code !== product.code && this.isCodeExists(newProductData.code)) {
-      console.log('The product code already exists.');
-      return;
-    }
-  
-    // Copiar los nuevos datos al producto existente
-    for (const key in newProductData) {
-      if (key in product) {
-        product[key] = newProductData[key];
-      }
-    }
-  
+    product ? (newProductData.code !== product.code && this.isCodeExists(newProductData.code)) ? console.log('The product code already exists.') : Object.keys(newProductData).forEach(key => key in product ? product[key] = newProductData[key] : null) : console.log('Product not found.');
     this.saveProducts();
   }
 
@@ -164,19 +143,7 @@ class ProductManager {
  */
   deleteProduct(id) {
     const index = this.products.findIndex(product => product.id === id);
-
-    if (index === -1) {
-      console.log('Product not found.');
-      return;
-    }
-
-    // Remove the product from the array
-    this.products.splice(index, 1);
-
-    // Save updated products list
-    this.saveProducts();
-
-    console.log('Product successfully deleted.');
+    index !== -1 ? (this.products.splice(index, 1), this.saveProducts(), console.log('Product successfully deleted.')) : console.log('Product not found.');
   }
 }
 
@@ -190,7 +157,7 @@ const currentDir = path.dirname(new URL(currentFileUrl).pathname);
 const productsPath = path.resolve(currentDir, '..', 'products.json');
 
 // Pass this path to the constructor of ProductManager
-const manager = new ProductManager(productsPath);
+export const manager = new ProductManager(productsPath);
 
 /* manager.addProduct({
   title: 'Alaska House',
@@ -305,4 +272,5 @@ manager.addProduct({
 /* console.log(manager.getProducts()); */ // Show all products after deletion
 
 /* useless info */
+
 export default ProductManager;

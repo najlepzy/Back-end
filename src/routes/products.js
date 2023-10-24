@@ -2,62 +2,85 @@ import express from 'express';
 import path from "path";
 import ProductManager from '../controllers/productManager.js'
 
+/**
+ * Router for product-related requests.
+ * @type {express.Router}
+ */
 const productRouter = express.Router();
+
+/**
+ * The URL of the current file.
+ * @type {string}
+ */
 const currentFileUrl = import.meta.url;
+
+/**
+ * The directory of the current file.
+ * @type {string}
+ */
 const currentDir = path.dirname(new URL(currentFileUrl).pathname);
+
+/**
+ * The path to the products.json file.
+ * @type {string}
+ */
 const productsPath = path.resolve(currentDir, '..', 'products.json');
+
+/**
+ * The manager for products.
+ * @type {ProductManager}
+ */
 const productManager = new ProductManager(productsPath);
 
-
+/**
+ * Route for getting all products or a limited number of products.
+ */
 productRouter.get('/', async (req, res) => {
     try {
         const limit = req.query.limit;
         const products = await productManager.getProducts();
-        if (limit) {
-            res.json(products.slice(0, limit));
-        } else {
-            res.json(products);
-        }
+        res.json(limit ? products.slice(0, limit) : products);
     } catch (error) {
         res.status(500).json({ message: 'Error getting products' });
     }
 });
 
+
+/**
+ * Route for getting a product by ID.
+ */
 productRouter.get('/:id', async (req, res) => {
     try {
         const productId = parseInt(req.params.id);
         const product = await productManager.getProductById(productId);
-        if (product) {
-            res.json(product);
-        } else {
-            res.status(404).json({ message: 'Product not found' });
-        }
+        product ? res.json(product) : res.status(404).json({ message: 'Product not found' });
     } catch (error) {
         res.status(500).json({ message: 'Error getting product' });
     }
 });
 
+
+/**
+ * Route for adding a new product.
+ */
 productRouter.post('/', async (req, res) => {
     try {
-        const newProduct = req.body;
-        console.log('Received product data:', newProduct); // Add this log
+        const newProduct = { ...req.body, status: true }; // Adds the status field with true default value
+        console.log('Received product data:', newProduct); 
         const result = productManager.addProduct(newProduct);
         
-        if (result.error) {
-            console.error('Error adding product:', result.error);
-            res.status(400).json({ message: result.error });
-        } else {
+        result.error ? 
+            (console.error('Error adding product:', result.error), res.status(400).json({ message: result.error })) : 
             res.status(201).json({ message: 'Product added successfully' });
-        }
     } catch (error) {
         console.error('Unexpected error:', error);
         res.status(500).json({ message: 'Unexpected error' });
     }
 });
 
-
-
-
+/**
+ * Route for updating an existing product or creating a new one if it doesn't exist.
+ */
 productRouter.put('/:id', async (req, res) => {
     try {
       const productId = parseInt(req.params.id);
@@ -77,17 +100,18 @@ productRouter.put('/:id', async (req, res) => {
         // If the product doesn't exist, create a new one
         const newProduct = await productManager.addProduct(updatedProductData);
         
-        if (newProduct.error) {
-          res.status(400).json({ message: newProduct.error });
-        } else {
-          res.status(201).json({ message: 'Producto created successfully', product: newProduct });
-        }
+        newProduct.error ? res.status(400).json({ message: newProduct.error }) : res.status(201).json({ message: 'Producto created successfully', product: newProduct });
       }
     } catch (error) {
       res.status(500).json({ message: 'Error updating product' });
     }
   });
+  
+  
 
+/**
+ * Route for deleting a product by ID.
+ */
 productRouter.delete('/:id', async (req, res) => {
     try {
         const productId = parseInt(req.params.id);

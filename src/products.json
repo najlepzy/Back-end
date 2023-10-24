@@ -1,11 +1,12 @@
 [
   {
-    "title": "Alaska House",
+    "title": "Alaska House1",
     "description": "Alaskan Rustic Home: Experience wilderness living in this charming log cabin, surrounded by mountains and forests. Cozy design, panoramic views, and modern amenities. Your retreat in the Last Frontier.",
     "price": 400000,
     "thumbnail": "alaskaHouse.imgExample",
-    "code": "P1",
-    "stock": 1,
+    "code": "P12",
+    "stock": 2,
+    "status": true,
     "id": 1
   },
   {
@@ -15,6 +16,7 @@
     "thumbnail": "californiaVilla.imgExample",
     "code": "P2",
     "stock": 1,
+    "status": true,
     "id": 2
   },
   {
@@ -24,6 +26,7 @@
     "thumbnail": "newYorkApartment.imgExample",
     "code": "P3",
     "stock": 1,
+    "status": true,
     "id": 3
   },
   {
@@ -33,6 +36,7 @@
     "thumbnail": "texasRanch.imgExample",
     "code": "P4",
     "stock": 1,
+    "status": true,
     "id": 4
   },
   {
@@ -42,6 +46,7 @@
     "thumbnail": "floridaBeachHouse.imgExample",
     "code": "P5",
     "stock": 1,
+    "status": true,
     "id": 5
   },
   {
@@ -51,6 +56,7 @@
     "thumbnail": "chicagoLoft.imgExample",
     "code": "P6",
     "stock": 1,
+    "status": true,
     "id": 6
   },
   {
@@ -60,6 +66,7 @@
     "thumbnail": "hawaiiBungalow.imgExample",
     "code": "P7",
     "stock": 1,
+    "status": true,
     "id": 7
   },
   {
@@ -69,6 +76,7 @@
     "thumbnail": "coloradoCabin.imgExample",
     "code": "P8",
     "stock": 1,
+    "status": true,
     "id": 8
   },
   {
@@ -78,6 +86,7 @@
     "thumbnail": "arizonaAdobeHome.imgExample",
     "code": "P9",
     "stock": 1,
+    "status": true,
     "id": 9
   },
   {
@@ -87,6 +96,7 @@
     "thumbnail": "washingtonTownhouse.imgExample",
     "code": "P10",
     "stock": 1,
+    "status": true,
     "id": 10
   }
 ]
