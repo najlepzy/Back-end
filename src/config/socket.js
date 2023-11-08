@@ -1,20 +1,13 @@
 import { Server } from "socket.io";
+import http from "http";
 
-export function SocketIo(server, products) {
-  const io = new Server(server);
+export const socketIo = (app) => {
+  const httpServer = http.createServer(app);
+  const io = new Server(httpServer);
 
   io.on("connection", (socket) => {
-    console.log("A user connected");
-
-    socket.on("disconnect", () => {
-      console.log("A user disconnected");
-    });
-
-    socket.emit("update products", products);
-
-    socket.on("chat message", (message) => {
-      console.log("Message: " + message);
-      io.emit("chat message", message);
-    });
+    console.log("Socket client connected");
   });
-}
+
+  return httpServer;
+};
